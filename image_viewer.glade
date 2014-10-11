@@ -134,7 +134,7 @@ Check if your passphrase is correct.</property>
     <property name="border_width">10</property>
     <property name="window_position">center</property>
     <property name="default_width">1024</property>
-    <property name="default_height">768</property>
+    <property name="default_height">900</property>
     <signal name="destroy" handler="on_mainWindow_destroy" swapped="no"/>
     <child>
       <object class="GtkVBox" id="vbox1">
