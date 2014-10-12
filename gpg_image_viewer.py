@@ -67,11 +67,16 @@ class GPGImageViewer:
 
         self.images = Images()
 
+        self.prevButton = self.gtkBuilder.get_object('go_left_button')
+        self.nextButton = self.gtkBuilder.get_object('go_right_button')
+
     def goLeftImage(self, data):
         """
         Show previous image
         """
         self.showImage(self.images.prev())
+        self.prevButton.set_can_default(self.images.getImage() ==
+                self.images.getFirst())
     # goLeftImage()
 
     def goRightImage(self, data):
@@ -79,6 +84,8 @@ class GPGImageViewer:
         Show to next image
         """
         self.showImage(self.images.next())
+        self.prevButton.set_can_default(self.images.getImage() ==
+                self.images.getLast())
     # goRightImage()
 
     def showFileChooser(self, data):

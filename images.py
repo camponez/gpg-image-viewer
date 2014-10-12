@@ -20,7 +20,7 @@ import os
 class Images:
     def __init__(self):
         self.__dirName = None
-        self.__listDir = None
+        self.__listDir = []
         self.__current = None
     # __init__()
 
@@ -34,6 +34,9 @@ class Images:
     # loadImages()
 
     def getImage(self):
+        if not self.__listDir:
+            return None
+
         image_name = self.__listDir[self.__current]
         image_path = self.__imagePath(image_name)
 
@@ -46,21 +49,30 @@ class Images:
     # imagePath()
 
     def next(self):
+        """
+        Go to previous images
+        """
 
-        self.__current += 1
+        if not self.__listDir:
+            return
 
-        if len(self.__listDir) <= self.__current:
-            self.__current -= 1
+        if len(self.__listDir) > self.__current + 1:
+            self.__current += 1
 
         return self.getImage()
 
     # next()
 
     def prev(self):
-        self.__current -= 1
+        """
+        Go to previous images
+        """
 
-        if self.__current < 0:
-            self.__current += 1
+        if not self.__listDir:
+            return
+
+        if self.__current - 1 >= 0:
+            self.__current -= 1
 
         return self.getImage()
     # prev()

@@ -31,7 +31,7 @@ class TestImages(unittest.TestCase):
         self.assertEqual(prevImage, self.images.prev())
     # test_nextImage()
 
-    def test_prevThanFirst(self):
+    def test_prevFirst(self):
         self.images.loadImages(self.image) # image4
         self.images.prev() # image3
         self.images.prev() # image2
@@ -45,7 +45,7 @@ class TestImages(unittest.TestCase):
 
     # test_prevThanFirst()
 
-    def test_afterThanlast(self):
+    def test_afterLast(self):
         self.images.loadImages(self.image) # image4
         self.images.next() # image5
         self.images.next() # image6
@@ -76,6 +76,23 @@ class TestImages(unittest.TestCase):
         self.images.loadImages(self.image)
         self.assertEqual(self.firstImage, self.images.getFirst())
     # test_lastImage()
+
+    def test_doNothingWhenEmpty(self):
+        """
+        Try to move with no images
+        """
+
+        self.assertIsNone(self.images.getImage())
+
+        self.images.next()
+
+        self.assertIsNone(self.images.getImage())
+
+        self.images.prev()
+
+        self.assertIsNone(self.images.getImage())
+
+    # test_doNothingWhenEmpty()
 
 if __name__ == '__main__':
     unittest.main()
