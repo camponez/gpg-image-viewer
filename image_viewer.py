@@ -68,10 +68,16 @@ class ImageViewer:
         self.images = Images()
 
     def goLeftImage(self, data):
+        """
+        Show previous image
+        """
         self.showImage(self.images.prev())
     # goLeftImage()
 
     def goRightImage(self, data):
+        """
+        Show to next image
+        """
         self.showImage(self.images.next())
     # goRightImage()
 
