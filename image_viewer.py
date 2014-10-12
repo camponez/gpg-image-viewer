@@ -24,6 +24,7 @@ __email__ = "camponez@gmail.com"
 """
 
 import sys
+import os
 import pygtk
 
 try:
@@ -56,10 +57,45 @@ class ImageViewer:
             "on_mainWindow_destroy" : gtk.main_quit,
             "on_menu_quit_activate" : gtk.main_quit,
             "on_menu_open_activate" : self.showFileChooser,
+            "on_go_left_button_clicked" : self.goLeftImage,
+            "on_go_right_button_clicked": self.goRightImage,
              }
 
         self.gtkBuilder.connect_signals(signals)
         self.passphrase = None
+        self.dirName = None
+        self.listDir = None
+        self.imageIndex = None
+
+    def goLeftImage(self, data):
+
+        self.imageIndex -= 1
+        if not self.__getImage():
+            self.imageIndex += 1
+
+
+    # goLeftImage()
+
+    def goRightImage(self, data):
+
+        self.imageIndex += 1
+        if not self.__getImage():
+            self.imageIndex -= 1
+
+    # goRightImage()
+
+    def __getImage(self):
+        if not self.imageIndex:
+            return False
+
+        try:
+            imageFile = self.listDir[self.imageIndex]
+        except:
+            return False
+
+        self.showImage(self.dirName+'/'+imageFile)
+
+        return True
 
     def showFileChooser(self, data):
         file_chooser = self.gtkBuilder.get_object('file_chooser_dialog')
@@ -70,6 +106,12 @@ class ImageViewer:
             return
 
         imageFile = file_chooser.get_filename()
+
+        self.dirName = os.path.dirname(imageFile)
+        self.listDir = os.listdir(self.dirName)
+        self.listDir.sort()
+        self.imageIndex = self.listDir.index(os.path.basename(imageFile))
+
         self.showImage(imageFile)
     # showFileChooser()
 
@@ -121,7 +163,7 @@ class ImageViewer:
         resize_pixbuf = pixbuf.scale_simple(width, height, gtk.gdk.INTERP_HYPER)
 
         mainLabel = self.gtkBuilder.get_object('main_label')
-        mainLabel.set_label("Image size: " + str(width) + " x " + str(height))
+        mainLabel.set_label("Image "+os.path.basename(image_path)+" size: " + str(width) + " x " + str(height))
 
 
         self.image.set_from_pixbuf(resize_pixbuf)
