@@ -40,7 +40,7 @@ from crypto import GNUPG
 from images import Images
 
 
-class ImageViewer:
+class GPGImageViewer:
     """
     Image Viewer class
     """
@@ -171,7 +171,7 @@ class ImageViewer:
 
 if __name__ == '__main__':
 
-    image = ImageViewer("image_viewer.glade")
+    image = GPGImageViewer("gpg_image_viewer.glade")
     if len(sys.argv) > 1:
         image.showImage(sys.argv[1])
 
