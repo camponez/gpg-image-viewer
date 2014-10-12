@@ -1,8 +1,3 @@
-import gnupg
-import os
-import tempfile
-import gtk
-
 """
 This file is part of GPG Image Viewer.
 
@@ -19,6 +14,12 @@ This file is part of GPG Image Viewer.
     You should have received a copy of the GNU General Public License
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 """
+
+import gnupg
+import os
+import tempfile
+import gtk
+
 
 class GNUPG:
     """
