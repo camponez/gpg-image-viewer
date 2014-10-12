@@ -6,6 +6,8 @@ class TestImages(unittest.TestCase):
     def setUp(self):
         self.images = Images()
         self.image = os.path.dirname(__file__)+'/fixtures/image4.jpg'
+        self.firstImage = os.path.dirname(__file__)+'/fixtures/image1.jpg'
+        self.lastImage = os.path.dirname(__file__)+'/fixtures/image9.jpg'
     # setUp()
 
     def test_loadImages(self):
@@ -35,13 +37,11 @@ class TestImages(unittest.TestCase):
         self.images.prev() # image2
         self.images.prev() # image1
 
-        firstImage = os.path.dirname(__file__)+'/fixtures/image1.jpg'
-
-        self.assertEqual(firstImage, self.images.getImage())
+        self.assertEqual(self.firstImage, self.images.getImage())
 
         self.images.prev() # image1
 
-        self.assertEqual(firstImage, self.images.getImage())
+        self.assertEqual(self.firstImage, self.images.getImage())
 
     # test_prevThanFirst()
 
@@ -53,13 +53,27 @@ class TestImages(unittest.TestCase):
         self.images.next() # image8
         self.images.next() # image9
 
-        lastImage = os.path.dirname(__file__)+'/fixtures/image9.jpg'
-
-        self.assertEqual(lastImage, self.images.getImage())
+        self.assertEqual(self.lastImage, self.images.getImage())
 
         self.images.next() # image9
 
-        self.assertEqual(lastImage, self.images.getImage())
+        self.assertEqual(self.lastImage, self.images.getImage())
 
     # test_prevThanFirst()
+
+    def test_lastImage(self):
+        """
+        Return last image
+        """
+        self.images.loadImages(self.image)
+        self.assertEqual(self.lastImage, self.images.getLast())
+    # test_lastImage()
+
+    def test_firstImage(self):
+        """
+        Return first Image
+        """
+        self.images.loadImages(self.image)
+        self.assertEqual(self.firstImage, self.images.getFirst())
+    # test_lastImage()
 

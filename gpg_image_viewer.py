@@ -167,7 +167,7 @@ class GPGImageViewer:
             return text
         else:
             return None
-
+    # __get_user_pw()
 
 if __name__ == '__main__':
 

@@ -35,11 +35,15 @@ class Images:
 
     def getImage(self):
         image_name = self.__listDir[self.__current]
-        image_path = self.__dirName+'/'+image_name
+        image_path = self.__imagePath(image_name)
 
         return image_path
 
     # getImage()
+
+    def __imagePath(self, image):
+        return self.__dirName+'/'+image
+    # imagePath()
 
     def next(self):
 
@@ -64,4 +68,12 @@ class Images:
     def getNumImages(self):
         return len(self.__listDir)
     # getNumImages()
+
+    def getLast(self):
+        return self.__imagePath(self.__listDir[self.getNumImages() - 1])
+    # getLast()
+
+    def getFirst(self):
+        return self.__imagePath(self.__listDir[0])
+    # getFirst()
 
