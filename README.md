@@ -1,6 +1,6 @@
 GPG Imagem Viewer
 
-This is a simple image viewer that handles images that were crypted by GPG.
+This is a simple image viewer that handles images that were encrypted by GPG.
 
 ## Motivation
 
