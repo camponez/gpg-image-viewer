@@ -37,6 +37,7 @@ import magic
 import gtk.glade
 
 from crypto import GNUPG
+from images import Images
 
 
 class ImageViewer:
@@ -63,39 +64,16 @@ class ImageViewer:
 
         self.gtkBuilder.connect_signals(signals)
         self.passphrase = None
-        self.dirName = None
-        self.listDir = None
-        self.imageIndex = None
+
+        self.images = Images()
 
     def goLeftImage(self, data):
-
-        self.imageIndex -= 1
-        if not self.__getImage():
-            self.imageIndex += 1
-
-
+        self.showImage(self.images.prev())
     # goLeftImage()
 
     def goRightImage(self, data):
-
-        self.imageIndex += 1
-        if not self.__getImage():
-            self.imageIndex -= 1
-
+        self.showImage(self.images.next())
     # goRightImage()
-
-    def __getImage(self):
-        if not self.imageIndex:
-            return False
-
-        try:
-            imageFile = self.listDir[self.imageIndex]
-        except:
-            return False
-
-        self.showImage(self.dirName+'/'+imageFile)
-
-        return True
 
     def showFileChooser(self, data):
         file_chooser = self.gtkBuilder.get_object('file_chooser_dialog')
@@ -107,10 +85,7 @@ class ImageViewer:
 
         imageFile = file_chooser.get_filename()
 
-        self.dirName = os.path.dirname(imageFile)
-        self.listDir = os.listdir(self.dirName)
-        self.listDir.sort()
-        self.imageIndex = self.listDir.index(os.path.basename(imageFile))
+        self.images.loadImages(imageFile)
 
         self.showImage(imageFile)
     # showFileChooser()
