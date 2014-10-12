@@ -23,3 +23,7 @@ More about GPG and how to create your private and public keys: https://www.gnupg
 ## How to run
 
 just do: ./gpg-image_viewer.py <image_file>
+
+## Running tests
+
+PYTHONPATH=. python tests/test_*.py

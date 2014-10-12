@@ -77,3 +77,5 @@ class TestImages(unittest.TestCase):
         self.assertEqual(self.firstImage, self.images.getFirst())
     # test_lastImage()
 
+if __name__ == '__main__':
+    unittest.main()
