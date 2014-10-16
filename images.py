@@ -17,35 +17,47 @@ This file is part of GPG Image Viewer.
 
 import os
 
-class Images:
+class Images(object):
+    """
+    Image class
+    """
     def __init__(self):
-        self.__dirName = None
-        self.__listDir = []
+        self.__dir_name = None
+        self.__list_dir = []
         self.__current = None
     # __init__()
 
-    def loadImages(self, image):
-        self.__dirName = os.path.dirname(image)
+    def load_images(self, image):
+        """
+        Load images
+        """
+        self.__dir_name = os.path.dirname(image)
 
-        self.__listDir = os.listdir(self.__dirName)
-        self.__listDir.sort()
+        self.__list_dir = os.listdir(self.__dir_name)
+        self.__list_dir.sort()
 
-        self.__current = self.__listDir.index(os.path.basename(image))
-    # loadImages()
+        self.__current = self.__list_dir.index(os.path.basename(image))
+    # load_images()
 
-    def getImage(self):
-        if not self.__listDir:
+    def get_image(self):
+        """
+        Get Image
+        """
+        if not self.__list_dir:
             return None
 
-        image_name = self.__listDir[self.__current]
-        image_path = self.__imagePath(image_name)
+        image_name = self.__list_dir[self.__current]
+        image_path = self.__image_path(image_name)
 
         return image_path
 
-    # getImage()
+    # get_image()
 
-    def __imagePath(self, image):
-        return self.__dirName+'/'+image
+    def __image_path(self, image):
+        """
+        Image path
+        """
+        return self.__dir_name+'/'+image
     # imagePath()
 
     def next(self):
@@ -53,13 +65,13 @@ class Images:
         Go to previous images
         """
 
-        if not self.__listDir:
+        if not self.__list_dir:
             return
 
-        if len(self.__listDir) > self.__current + 1:
+        if len(self.__list_dir) > self.__current + 1:
             self.__current += 1
 
-        return self.getImage()
+        return self.get_image()
 
     # next()
 
@@ -68,24 +80,33 @@ class Images:
         Go to previous images
         """
 
-        if not self.__listDir:
+        if not self.__list_dir:
             return
 
         if self.__current - 1 >= 0:
             self.__current -= 1
 
-        return self.getImage()
+        return self.get_image()
     # prev()
 
-    def getNumImages(self):
-        return len(self.__listDir)
-    # getNumImages()
+    def get_num_images(self):
+        """
+        Get number of images
+        """
+        return len(self.__list_dir)
+    # get_num_images()
 
-    def getLast(self):
-        return self.__imagePath(self.__listDir[self.getNumImages() - 1])
-    # getLast()
+    def get_last(self):
+        """
+        Return last image
+        """
+        return self.__image_path(self.__list_dir[self.get_num_images() - 1])
+    # get_last()
 
-    def getFirst(self):
-        return self.__imagePath(self.__listDir[0])
-    # getFirst()
+    def get_first(self):
+        """
+        Return first image
+        """
+        return self.__image_path(self.__list_dir[0])
+    # get_first()
 

@@ -40,73 +40,78 @@ from crypto import GNUPG
 from images import Images
 
 
-class GPGImageViewer:
+class GPGImageViewer(object):
     """
     Image Viewer class
     """
 
-    def __init__(self, gladeFile):
-        self.gtkBuilder = gtk.Builder()
-        self.gtkBuilder.add_from_file(gladeFile)
+    def __init__(self, glade_file):
+        self.gtk_builder = gtk.Builder()
+        self.gtk_builder.add_from_file(glade_file)
 
-        self.gpg = GNUPG(self.gtkBuilder.get_object('error_decrypt_dialog'))
+        self.gpg = GNUPG(self.gtk_builder.get_object('error_decrypt_dialog'))
 
-        self.window = self.gtkBuilder.get_object('mainWindow')
-        self.image = self.gtkBuilder.get_object('imageView')
+        self.window = self.gtk_builder.get_object('mainWindow')
+        self.image = self.gtk_builder.get_object('imageView')
 
-        signals = {
-            "on_mainWindow_destroy" : gtk.main_quit,
-            "on_menu_quit_activate" : gtk.main_quit,
-            "on_menu_open_activate" : self.showFileChooser,
-            "on_go_left_button_clicked" : self.goLeftImage,
-            "on_go_right_button_clicked": self.goRightImage,
-             }
+        signals = {"on_mainWindow_destroy" : gtk.main_quit,
+                   "on_menu_quit_activate" : gtk.main_quit,
+                   "on_menu_open_activate" : self.cb_show_file_chooser,
+                   "on_go_left_button_clicked" : self.cb_go_left_image,
+                   "on_go_right_button_clicked": self.cb_go_right_image,
+                  }
 
-        self.gtkBuilder.connect_signals(signals)
+        self.gtk_builder.connect_signals(signals)
         self.passphrase = None
 
         self.images = Images()
 
-        self.prevButton = self.gtkBuilder.get_object('go_left_button')
-        self.nextButton = self.gtkBuilder.get_object('go_right_button')
+        self.prev_button = self.gtk_builder.get_object('go_left_button')
+        self.next_button = self.gtk_builder.get_object('go_right_button')
 
-    def goLeftImage(self, data):
+    def cb_go_left_image(self, cb_data):
         """
         Show previous image
         """
-        self.showImage(self.images.prev())
-        self.prevButton.set_can_default(self.images.getImage() ==
-                self.images.getFirst())
-    # goLeftImage()
+        self.show_image(self.images.prev())
+        self.prev_button.set_can_default(self.images.get_image() ==\
+                self.images.get_first())
+    # cb_go_left_image()
 
-    def goRightImage(self, data):
+    def cb_go_right_image(self, _data):
         """
         Show to next image
         """
-        self.showImage(self.images.next())
-        self.prevButton.set_can_default(self.images.getImage() ==
-                self.images.getLast())
-    # goRightImage()
+        self.show_image(self.images.next())
+        self.prev_button.set_can_default(self.images.get_image() ==
+                                         self.images.get_last())
+    # cb_go_right_image()
 
-    def showFileChooser(self, data):
-        file_chooser = self.gtkBuilder.get_object('file_chooser_dialog')
+    def cb_show_file_chooser(self, _data):
+        """
+        Show file chooser
+        """
+        file_chooser = self.gtk_builder.get_object('file_chooser_dialog')
         response = file_chooser.run()
         file_chooser.hide()
 
         if response != gtk.RESPONSE_OK:
             return
 
-        imageFile = file_chooser.get_filename()
+        image_file = file_chooser.get_filename()
 
-        self.images.loadImages(imageFile)
+        self.images.load_images(image_file)
 
-        self.showImage(imageFile)
-    # showFileChooser()
+        self.show_image(image_file)
+    # cb_show_file_chooser()
 
-    def showImage(self, image_path):
+    def show_image(self, image_path):
         """
-        Function showImage
+        Function show_image
         """
+
+        if not image_path:
+            return
 
         # detect if it's a supported image type
         #if not check if is encrypted
@@ -126,7 +131,7 @@ class GPGImageViewer:
 
             else:
                 not_supported_dialog = \
-                self.gtkBuilder.get_object('not_supported_dialog')
+                self.gtk_builder.get_object('not_supported_dialog')
 
                 not_supported_msg = file_type + ' is not a supported file!'
                 not_supported_dialog.set_markup(not_supported_msg)
@@ -150,8 +155,9 @@ class GPGImageViewer:
 
         resize_pixbuf = pixbuf.scale_simple(width, height, gtk.gdk.INTERP_HYPER)
 
-        mainLabel = self.gtkBuilder.get_object('main_label')
-        mainLabel.set_label("Image "+os.path.basename(image_path)+" size: " + str(width) + " x " + str(height))
+        main_label = self.gtk_builder.get_object('main_label')
+        main_label.set_label("Image "+os.path.basename(image_path) +\
+                " size: " + str(width) + " x " + str(height))
 
 
         self.image.set_from_pixbuf(resize_pixbuf)
@@ -162,13 +168,13 @@ class GPGImageViewer:
         encrypted files.
         """
 
-        dialogWindow = self.gtkBuilder.get_object('passwordDialog')
-        userEntry = self.gtkBuilder.get_object('passphrase_entry')
+        dialog_window = self.gtk_builder.get_object('passwordDialog')
+        user_entry = self.gtk_builder.get_object('passphrase_entry')
 
-        response = dialogWindow.run()
-        text = userEntry.get_text()
+        response = dialog_window.run()
+        text = user_entry.get_text()
 
-        dialogWindow.hide()
+        dialog_window.hide()
 
         if (response == gtk.RESPONSE_OK) and (text != ''):
             return text
@@ -178,8 +184,9 @@ class GPGImageViewer:
 
 if __name__ == '__main__':
 
-    image = GPGImageViewer("gpg_image_viewer.glade")
+    IMG = None
     if len(sys.argv) > 1:
-        image.showImage(sys.argv[1])
+        IMG = sys.argv[1]
 
+    GPGImageViewer("gpg_image_viewer.glade").show_image(IMG)
     gtk.main()
