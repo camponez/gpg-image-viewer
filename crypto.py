@@ -21,33 +21,34 @@ import tempfile
 import gtk
 
 
-class GNUPG:
+class GNUPG(object):
     """
     GNUPG class
     """
-    def __init__(self, error_dialog):
-        self.gpg = gnupg.GPG()
+    def __init__(self, error_dialog, s_keyring=None):
+        self.gpg = gnupg.GPG(secret_keyring=s_keyring)
         self.error_dialog = error_dialog
     #__init__()
 
-    def decryptFile(self, imageFile, passphrase):
+    def decrypt_file(self, image_file, passphrase):
         """
         This method decrypt a image file
         """
-        decryptFile = self.gpg.decrypt_file(open(imageFile, 'rb'),
-                passphrase = passphrase)
+        decrypted_file = self.gpg.decrypt_file(open(image_file, 'rb'),
+                                               passphrase=passphrase)
 
         image_path = tempfile.mkstemp()
-        open(image_path[1], 'wb').write(decryptFile.data)
+        open(image_path[1], 'wb').write(decrypted_file.data)
 
         try:
             pixbuf = gtk.gdk.pixbuf_new_from_file(image_path[1])
         except:
-            self.error_dialog.run()
-            self.error_dialog.hide()
+            if self.error_dialog:
+                self.error_dialog.run()
+                self.error_dialog.hide()
             raise
-
-        os.remove(image_path[1])
+        finally:
+            os.remove(image_path[1])
 
         return pixbuf
     #decryptFile()

@@ -16,6 +16,7 @@ This file is part of GPG Image Viewer.
 """
 
 import os
+import glob
 
 class Images(object):
     """
@@ -33,32 +34,23 @@ class Images(object):
         """
         self.__dir_name = os.path.dirname(image)
 
-        self.__list_dir = os.listdir(self.__dir_name)
+        self.__list_dir = glob.glob(self.__dir_name+"/*.jpg")
         self.__list_dir.sort()
 
-        self.__current = self.__list_dir.index(os.path.basename(image))
+        self.__current = self.__list_dir.index(image)
     # load_images()
 
-    def get_image(self):
-        """
-        Get Image
-        """
-        if not self.__list_dir:
-            return None
-
-        image_name = self.__list_dir[self.__current]
-        image_path = self.__image_path(image_name)
-
-        return image_path
-
-    # get_image()
-
-    def __image_path(self, image):
+    @property
+    def image(self):
         """
         Image path
         """
-        return self.__dir_name+'/'+image
-    # imagePath()
+        if self.__current >= 0:
+            return self.__list_dir[self.__current]
+        else:
+            return None
+
+    # image()
 
     def next(self):
         """
@@ -71,7 +63,7 @@ class Images(object):
         if len(self.__list_dir) > self.__current + 1:
             self.__current += 1
 
-        return self.get_image()
+        return self.image
 
     # next()
 
@@ -86,27 +78,28 @@ class Images(object):
         if self.__current - 1 >= 0:
             self.__current -= 1
 
-        return self.get_image()
+        return self.image
     # prev()
 
-    def get_num_images(self):
+    @property
+    def num_images(self):
         """
         Get number of images
         """
         return len(self.__list_dir)
-    # get_num_images()
+    # num_images()
 
     def get_last(self):
         """
         Return last image
         """
-        return self.__image_path(self.__list_dir[self.get_num_images() - 1])
+        return self.__list_dir[self.num_images - 1]
     # get_last()
 
     def get_first(self):
         """
         Return first image
         """
-        return self.__image_path(self.__list_dir[0])
+        return self.__list_dir[0]
     # get_first()
 

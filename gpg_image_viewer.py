@@ -125,7 +125,7 @@ class GPGImageViewer(object):
                     self.passphrase = self.__get_user_pw()
 
                 try:
-                    pixbuf = self.gpg.decryptFile(image_path, self.passphrase)
+                    pixbuf = self.gpg.decrypt_file(image_path, self.passphrase)
                 except:
                     return
 
