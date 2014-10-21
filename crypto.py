@@ -19,7 +19,7 @@ import gnupg
 import os
 import tempfile
 import gtk
-
+from gobject import GError
 
 class GNUPG(object):
     """
