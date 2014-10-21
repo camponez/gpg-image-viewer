@@ -74,7 +74,7 @@ class GPGImageViewer(object):
         Show previous image
         """
         self.show_image(self.images.prev())
-        self.prev_button.set_can_default(self.images.get_image() ==\
+        self.prev_button.set_can_default(self.images.image ==\
                 self.images.get_first())
     # cb_go_left_image()
 
@@ -83,7 +83,7 @@ class GPGImageViewer(object):
         Show to next image
         """
         self.show_image(self.images.next())
-        self.prev_button.set_can_default(self.images.get_image() ==
+        self.prev_button.set_can_default(self.images.image ==
                                          self.images.get_last())
     # cb_go_right_image()
 
