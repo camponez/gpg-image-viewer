@@ -37,18 +37,18 @@ class GNUPG(object):
         decrypted_file = self.gpg.decrypt_file(open(image_file, 'rb'),
                                                passphrase=passphrase)
 
-        image_path = tempfile.mkstemp()
-        open(image_path[1], 'wb').write(decrypted_file.data)
+        pbl = gtk.gdk.PixbufLoader()
+        pbl.write(decrypted_file.data)
 
         try:
-            pixbuf = gtk.gdk.pixbuf_new_from_file(image_path[1])
+            pixbuf = pbl.get_pixbuf()
         except:
             if self.error_dialog:
                 self.error_dialog.run()
                 self.error_dialog.hide()
             raise
         finally:
-            os.remove(image_path[1])
+            pbl.close()
 
         return pixbuf
     #decryptFile()
