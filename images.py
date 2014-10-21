@@ -34,7 +34,9 @@ class Images(object):
         """
         self.__dir_name = os.path.dirname(image)
 
-        self.__list_dir = glob.glob(self.__dir_name+"/*.jpg")
+        for img in ["/*.jpg", "/*.png", "/*.gpg"]:
+            self.__list_dir += (glob.glob(self.__dir_name+img))
+
         self.__list_dir.sort()
 
         self.__current = self.__list_dir.index(image)
