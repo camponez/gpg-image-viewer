@@ -143,6 +143,7 @@ class GPGImageViewer(object):
             pixbuf = gtk.gdk.pixbuf_new_from_file(image_path)
 
 
+        pixbuf = pixbuf.apply_embedded_orientation()
         width = pixbuf.get_width()
         height = pixbuf.get_height()
 
