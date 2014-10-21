@@ -34,6 +34,9 @@ class Images(object):
         """
         self.__dir_name = os.path.dirname(image)
 
+        # everytime it loads should start with a blank list
+        self.__list_dir = []
+
         for img in ["/*.jpg", "/*.png", "/*.gpg"]:
             self.__list_dir += (glob.glob(self.__dir_name+img))
 
