@@ -27,4 +27,8 @@ just do: `./gpg-image_viewer.py <image_file>`
 
 ## Running tests
 
- python -m unittest discover
+ `python -m unittest discover`
+
+## TODO
+
+Better image manipualtion
