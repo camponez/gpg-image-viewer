@@ -75,8 +75,6 @@ class GPGImageViewer(object):
         Show previous image
         """
         self.show_image(self.images.prev())
-        self.prev_button.set_can_default(self.images.image ==\
-                self.images.get_first())
     # cb_go_left_image()
 
     def cb_go_right_image(self, _data):
@@ -84,8 +82,6 @@ class GPGImageViewer(object):
         Show to next image
         """
         self.show_image(self.images.next())
-        self.prev_button.set_can_default(self.images.image ==
-                                         self.images.get_last())
     # cb_go_right_image()
 
     def cb_show_file_chooser(self, _data):
@@ -113,6 +109,13 @@ class GPGImageViewer(object):
 
         if not image_path:
             return
+
+        self.images.load_images(image_path)
+
+        self.prev_button.set_sensitive(self.images.image != \
+                                         self.images.get_first())
+        self.next_button.set_sensitive(self.images.image != \
+                                       self.images.get_last())
 
         # detect if it's a supported image type
         #if not check if is encrypted
@@ -158,7 +161,7 @@ class GPGImageViewer(object):
         resize_pixbuf = pixbuf.scale_simple(width, height, gtk.gdk.INTERP_HYPER)
 
         main_label = self.gtk_builder.get_object('main_label')
-        main_label.set_label("Image "+os.path.basename(image_path) +\
+        main_label.set_label("Image " + os.path.basename(image_path) +\
                 " size: " + str(width) + " x " + str(height))
 
 
