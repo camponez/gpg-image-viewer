@@ -37,7 +37,7 @@ class Images(object):
         # everytime it loads should start with a blank list
         self.__list_dir = []
 
-        for img in ["/*.jpg", "/*.png", "/*.gpg"]:
+        for img in ["/*.jpg", "/*.png", "/*.jpg.gpg", "/*.png.gpg"]:
             self.__list_dir += (glob.glob(self.__dir_name+img))
 
         self.__list_dir.sort()
