@@ -68,6 +68,7 @@ class GPGImageViewer(object):
 
         self.prev_button = self.gtk_builder.get_object('go_left_button')
         self.next_button = self.gtk_builder.get_object('go_right_button')
+        self.gtk_builder.get_object('ok_passphrase_button').grab_default()
 
     def cb_go_left_image(self, cb_data):
         """
