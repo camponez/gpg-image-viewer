@@ -147,7 +147,7 @@ class GPGImageViewer(object):
         width = pixbuf.get_width()
         height = pixbuf.get_height()
 
-        while width > 1900 or height > 1000:
+        while width > 900 or height > 900:
             width = width * .9
             height = height * .9
 
