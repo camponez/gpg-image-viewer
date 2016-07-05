@@ -6,7 +6,7 @@ import filecmp
 class TestCrypto(unittest.TestCase):
     def setUp(self):
         self.fixture_dir = os.path.dirname(__file__)+"/fixtures/gnupg"
-        self.gnupg = GNUPG(None, self.fixture_dir+"/gpg.key")
+        self.gnupg = GNUPG(None, self.fixture_dir+"/gpg.key", False)
     # setUp()
 
     def test_decrypt_file(self):

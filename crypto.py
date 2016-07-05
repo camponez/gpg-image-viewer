@@ -19,23 +19,33 @@ import gnupg
 import os
 import tempfile
 import gtk
+import subprocess
 from gobject import GError
 
 class GNUPG(object):
     """
     GNUPG class
     """
-    def __init__(self, error_dialog, s_keyring=None):
-        self.gpg = gnupg.GPG(secret_keyring=s_keyring)
+    def __init__(self, error_dialog, s_keyring=None, use_agent=True):
+
+        gpg_path = self.find_gpg_path()
+
+        self.gpg = gnupg.GPG(secret_keyring=s_keyring,
+                gpgbinary=gpg_path,
+                use_agent=use_agent)
         self.error_dialog = error_dialog
     #__init__()
 
-    def decrypt_file(self, image_file, passphrase):
+    def find_gpg_path(self):
+        return subprocess.check_output(['which', 'gpg2']).strip()
+    # find_gpg_path()
+
+    def decrypt_file(self, image_file, gpg_passphrase=None):
         """
         This method decrypt a image file
         """
         decrypted_file = self.gpg.decrypt_file(open(image_file, 'rb'),
-                                               passphrase=passphrase)
+                                               passphrase=gpg_passphrase)
 
         pbl = gtk.gdk.PixbufLoader()
         pbl.write(decrypted_file.data)

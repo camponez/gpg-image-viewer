@@ -62,7 +62,6 @@ class GPGImageViewer(object):
                   }
 
         self.gtk_builder.connect_signals(signals)
-        self.passphrase = None
 
         self.images = Images()
 
@@ -102,6 +101,16 @@ class GPGImageViewer(object):
         self.show_image(image_file)
     # cb_show_file_chooser()
 
+    def is_gpg_file(self, file_type):
+        if file_type.startswith('GPG encrypted data'):
+            return True
+
+        if file_type.startswith('PGP RSA encrypted'):
+            return True
+
+        return False
+    # is_gpg_file()
+
     def show_image(self, image_path):
         """
         Function show_image
@@ -124,15 +133,9 @@ class GPGImageViewer(object):
 
             file_type = magic.from_file(image_path)
 
-            if  file_type == 'GPG encrypted data':
-                if not self.passphrase:
-                    self.passphrase = self.__get_user_pw()
+            if  self.is_gpg_file(file_type):
 
-                try:
-                    pixbuf = self.gpg.decrypt_file(image_path, self.passphrase)
-                except:
-                    return
-
+                pixbuf = self.gpg.decrypt_file(image_path)
             else:
                 not_supported_dialog = \
                 self.gtk_builder.get_object('not_supported_dialog')
