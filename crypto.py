@@ -26,12 +26,12 @@ class GNUPG(object):
     """
     GNUPG class
     """
-    def __init__(self, error_dialog, s_keyring=None, use_agent=True):
+    def __init__(self, error_dialog, s_keyring=None, p_keyring=None, use_agent=True):
 
         gpg_path = self.find_gpg_path()
 
-        self.gpg = gnupg.GPG(secret_keyring=s_keyring,
-                gpgbinary=gpg_path,
+        self.gpg = gnupg.GPG(secring=s_keyring,
+                keyring=p_keyring,
                 use_agent=use_agent)
         self.error_dialog = error_dialog
     #__init__()
