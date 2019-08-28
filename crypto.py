@@ -15,12 +15,13 @@ This file is part of GPG Image Viewer.
     along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import gnupg
 import os
 import tempfile
 import gtk
 import subprocess
-from gobject import GError
+from pretty_bad_protocol import gnupg
+gnupg._parsers.Verify.TRUST_LEVELS["DECRYPTION_COMPLIANCE_MODE"] = 23
+
 
 class GNUPG(object):
     """
