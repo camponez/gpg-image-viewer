@@ -1,0 +1,3 @@
+PyGObject
+python-magic
+pretty-bad-protocol
