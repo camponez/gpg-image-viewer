@@ -17,7 +17,11 @@ This file is part of GPG Image Viewer.
 
 import os
 import tempfile
-import gtk
+#import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import GdkPixbuf
 import subprocess
 from pretty_bad_protocol import gnupg
 gnupg._parsers.Verify.TRUST_LEVELS["DECRYPTION_COMPLIANCE_MODE"] = 23
@@ -27,13 +31,17 @@ class GNUPG(object):
     """
     GNUPG class
     """
-    def __init__(self, error_dialog, s_keyring=None, p_keyring=None, use_agent=True):
+
+    def __init__(self, error_dialog, s_keyring=None, p_keyring=None,
+                 home_dir="/home/camponez/.gnupg", use_agent=True):
 
         gpg_path = self.find_gpg_path()
 
         self.gpg = gnupg.GPG(secring=s_keyring,
-                keyring=p_keyring,
-                use_agent=use_agent)
+                             binary='/usr/local/bin/gpg2',
+                             homedir=home_dir,
+                             keyring=p_keyring,
+                             use_agent=use_agent)
         self.error_dialog = error_dialog
     #__init__()
 
@@ -48,12 +56,13 @@ class GNUPG(object):
         decrypted_file = self.gpg.decrypt_file(open(image_file, 'rb'),
                                                passphrase=gpg_passphrase)
 
-        pbl = gtk.gdk.PixbufLoader()
+        pbl = GdkPixbuf.PixbufLoader()
         pbl.write(decrypted_file.data)
+        # print(decrypted_file.stderr)
 
         try:
             pixbuf = pbl.get_pixbuf()
-        except:
+        except BaseException:
             if self.error_dialog:
                 self.error_dialog.run()
                 self.error_dialog.hide()
@@ -62,4 +71,4 @@ class GNUPG(object):
             pbl.close()
 
         return pixbuf
-    #decryptFile()
+    # decryptFile()

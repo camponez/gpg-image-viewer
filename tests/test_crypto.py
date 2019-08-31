@@ -8,8 +8,9 @@ class TestCrypto(unittest.TestCase):
         self.fixture_dir = os.path.dirname(__file__)+"/fixtures/gnupg"
         self.gnupg = GNUPG(
                 None,
-                self.fixture_dir+"/secring.gpg",
-                self.fixture_dir+"/pubring.gpg",
+                "secring.gpg",
+                "pubring.gpg",
+                self.fixture_dir,
                 False
                 )
     # setUp()

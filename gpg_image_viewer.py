@@ -23,30 +23,27 @@ __email__ = "camponez@gmail.com"
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-import sys
-import os
-import pygtk
-
-try:
-    pygtk.require('2.0')
-except:
-    sys.exit(0)
-
-import gtk
-import magic
-import gtk.glade
-
+import gi
 from crypto import GNUPG
 from images import Images
+import sys
+import os
+
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+from gi.repository import Gdk
+from gi.repository import GdkPixbuf
+
+import magic
 
 
-class GPGImageViewer(object):
+class GPGImageViewer:
     """
     Image Viewer class
     """
 
     def __init__(self, glade_file):
-        self.gtk_builder = gtk.Builder()
+        self.gtk_builder = Gtk.Builder()
         self.gtk_builder.add_from_file(glade_file)
 
         self.gpg = GNUPG(self.gtk_builder.get_object('error_decrypt_dialog'))
@@ -54,12 +51,12 @@ class GPGImageViewer(object):
         self.window = self.gtk_builder.get_object('mainWindow')
         self.image = self.gtk_builder.get_object('imageView')
 
-        signals = {"on_mainWindow_destroy" : gtk.main_quit,
-                   "on_menu_quit_activate" : gtk.main_quit,
-                   "on_menu_open_activate" : self.cb_show_file_chooser,
-                   "on_go_left_button_clicked" : self.cb_go_left_image,
+        signals = {"on_mainWindow_destroy": Gtk.main_quit,
+                   "on_menu_quit_activate": Gtk.main_quit,
+                   "on_menu_open_activate": self.cb_show_file_chooser,
+                   "on_go_left_button_clicked": self.cb_go_left_image,
                    "on_go_right_button_clicked": self.cb_go_right_image,
-                  }
+                   }
 
         self.gtk_builder.connect_signals(signals)
 
@@ -91,7 +88,7 @@ class GPGImageViewer(object):
         response = file_chooser.run()
         file_chooser.hide()
 
-        if response != gtk.RESPONSE_OK:
+        if response != Gtk.ResponseType.OK:
             return
 
         image_file = file_chooser.get_filename()
@@ -121,34 +118,33 @@ class GPGImageViewer(object):
 
         self.images.load_images(image_path)
 
-        self.prev_button.set_sensitive(self.images.image != \
-                                         self.images.get_first())
-        self.next_button.set_sensitive(self.images.image != \
+        self.prev_button.set_sensitive(self.images.image !=
+                                       self.images.get_first())
+        self.next_button.set_sensitive(self.images.image !=
                                        self.images.get_last())
 
         # detect if it's a supported image type
-        #if not check if is encrypted
+        # if not check if is encrypted
         # fail otherwise
-        if not gtk.gdk.pixbuf_get_file_info(image_path):
+        # if not GdkPixbuf.Pixbuf.get_file_info(image_path):
 
-            file_type = magic.from_file(image_path)
+        file_type = magic.from_file(image_path)
 
-            if  self.is_gpg_file(file_type):
+        if self.is_gpg_file(file_type):
 
-                pixbuf = self.gpg.decrypt_file(image_path)
-            else:
-                not_supported_dialog = \
+            pixbuf = self.gpg.decrypt_file(image_path)
+        else:
+            not_supported_dialog = \
                 self.gtk_builder.get_object('not_supported_dialog')
 
-                not_supported_msg = file_type + ' is not a supported file!'
-                not_supported_dialog.set_markup(not_supported_msg)
-                not_supported_dialog.run()
-                not_supported_dialog.hide()
-                return
+            not_supported_msg = file_type + ' is not a supported file!'
+            not_supported_dialog.set_markup(not_supported_msg)
+            not_supported_dialog.run()
+            not_supported_dialog.hide()
+            return
 
-        else:
-            pixbuf = gtk.gdk.pixbuf_new_from_file(image_path)
-
+        # else:
+        #     pixbuf = GdkPixbuf.Pixbuf.new_from_file(image_path)
 
         pixbuf = pixbuf.apply_embedded_orientation()
         width = pixbuf.get_width()
@@ -161,12 +157,12 @@ class GPGImageViewer(object):
         width = int(width)
         height = int(height)
 
-        resize_pixbuf = pixbuf.scale_simple(width, height, gtk.gdk.INTERP_HYPER)
+        resize_pixbuf = pixbuf.scale_simple(width, height,
+                                            GdkPixbuf.InterpType.HYPER)
 
         main_label = self.gtk_builder.get_object('main_label')
-        main_label.set_label("Image " + os.path.basename(image_path) +\
-                " size: " + str(width) + " x " + str(height))
-
+        main_label.set_label("Image " + os.path.basename(image_path) +
+                             " size: " + str(width) + " x " + str(height))
 
         self.image.set_from_pixbuf(resize_pixbuf)
 
@@ -190,6 +186,7 @@ class GPGImageViewer(object):
             return None
     # __get_user_pw()
 
+
 if __name__ == '__main__':
 
     IMG = None
@@ -197,4 +194,4 @@ if __name__ == '__main__':
         IMG = sys.argv[1]
 
     GPGImageViewer("gpg_image_viewer.glade").show_image(IMG)
-    gtk.main()
+    Gtk.main()
